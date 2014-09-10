@@ -45,7 +45,7 @@ public class BinaryHeap<T extends Comparable> {
             throw new Exception("Heap Overflow Exception: "+ entry);
         pq[size] = entry;
         size++;
-        maxHeapifyUp(pq, getNewPos(size-1),true);
+        maxHeapify(pq, getNewPos(size - 1), true);
         print();
     }
 
@@ -56,7 +56,7 @@ public class BinaryHeap<T extends Comparable> {
         swap(pq,0,size);
         Comparable entry = pq[size];
         pq[size] = null;
-        maxHeapifyUp(pq,0,false);
+        maxHeapify(pq, 0, false);
         System.out.println("Popped: "+ entry);
         print();
         return entry;
@@ -70,7 +70,7 @@ public class BinaryHeap<T extends Comparable> {
         return null;
     }
 
-    private void maxHeapifyUp(Comparable[] entries, int pos, boolean swimUp) throws Exception {
+    private void maxHeapify(Comparable[] entries, int pos, boolean swimUp) throws Exception {
         int leftPos = 2 * pos + 1;
         int rightPos = 2 * pos + 2;
 
@@ -90,11 +90,12 @@ public class BinaryHeap<T extends Comparable> {
         if (parent == null)
             throw new Exception("Entry not found Exception: " + pos);
 
-        //Find the largest
+        //Find the largest of left and right for swaps
         int largest = pos;
         if (left != null && comparator.compare(parent,left) < 0) {
             largest = leftPos;
         }
+
         if (right != null && comparator.compare(parent,right) < 0) {
             if(largest == pos)
                 largest = rightPos;
@@ -109,7 +110,7 @@ public class BinaryHeap<T extends Comparable> {
             if (swimUp && pos == 0)
                 return;
 
-            maxHeapifyUp(entries, swimUp ? getNewPos(pos) : largest ,swimUp);
+            maxHeapify(entries, swimUp ? getNewPos(pos) : largest, swimUp);
         }
     }
 
