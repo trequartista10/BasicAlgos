@@ -1,6 +1,7 @@
 package trees;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,14 +10,18 @@ import java.util.Collection;
  * Time: 10:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TreeNode<T extends Comparable<T>> implements Comparable<TreeNode<T>>{
+public class TreeNode<T extends Comparable> implements Comparable<TreeNode<T>>{
     T val;
-    TreeNode leftChild; //For Binary Tree
-    TreeNode rightChild; //For Binary Tree
+    TreeNode left; //For Binary Tree
+    TreeNode right; //For Binary Tree
 
     TreeNode parent; //May not be required in most algorithms
     boolean isRed = false; //For Red Black type Trees
-    Collection<TreeNode> children; //If it points to a collection of nodes like a heap or as a graph Node.
+    public List<TreeNode<T>> children = new ArrayList<>(); //If it points to a collection of nodes like a heap or as a graph Node.
+
+    TreeNode(T val) {
+        this.val = val;
+    }
 
     /**
      * Insersts a tree node into a tree based on
@@ -29,16 +34,60 @@ public class TreeNode<T extends Comparable<T>> implements Comparable<TreeNode<T>
             return; // No dupes allowed
 
         if(dir > 0) {
-            if(leftChild == null)
-                leftChild = insertNode;
+            if(left == null)
+                left = insertNode;
             else
-                leftChild.insertBSTTreeNode(insertNode);
+                left.insertBSTTreeNode(insertNode);
         }else {
-            if(rightChild == null)
-                rightChild = insertNode;
+            if(right == null)
+                right = insertNode;
             else
-                rightChild.insertBSTTreeNode(insertNode);
+                right.insertBSTTreeNode(insertNode);
         }
+    }
+
+    boolean deleteBSTTreeNode(TreeNode<T> deleteNode) {
+        if(this.compareTo(deleteNode) > 0) {
+            if(left == null)
+                return false; // No left Node
+
+           if(left.compareTo(deleteNode) == 0) {
+               TreeNode<T> rightNode = this.left.right;
+               this.left = left.left;
+               if(rightNode != null)
+                this.left.insertBSTTreeNode(rightNode);
+
+               return true;
+           }else if(left.compareTo(deleteNode) > 0) {
+               return this.left.deleteBSTTreeNode(deleteNode);
+
+           } else
+               return false; //No Match
+
+
+        }else if(this.compareTo(deleteNode) < 0) {
+            if(this.right == null)
+                return  false;
+            if(this.right.compareTo(deleteNode) == 0) {
+                TreeNode<T> leftNode = this.right.left;
+                this.right = this.right.right;
+                if(leftNode != null)
+                    this.right.insertBSTTreeNode(leftNode);
+
+                return true;
+            } else if(this.right.compareTo(deleteNode) < 0) {
+                return this.right.deleteBSTTreeNode(deleteNode);
+
+            }   else
+                return false;//No match
+
+        }else {
+            //This is the root Node!
+            // Do it outside since this is the root node
+            return false;
+
+        }
+
     }
 
 
@@ -47,13 +96,13 @@ public class TreeNode<T extends Comparable<T>> implements Comparable<TreeNode<T>
         if(val == null)
             return new int[] {0,0};
 
-        if(leftChild != null)
-            leftHeightAndDiameter = leftChild.getHeightAndDiameter();
+        if(left != null)
+            leftHeightAndDiameter = left.getHeightAndDiameter();
         else
             leftHeightAndDiameter =  new int[]{0,0};
 
-        if(rightChild != null)
-            rightHeightAndDiameter = rightChild.getHeightAndDiameter();
+        if(right != null)
+            rightHeightAndDiameter = right.getHeightAndDiameter();
         else
             rightHeightAndDiameter = new int[]{0,0};
 
@@ -85,17 +134,19 @@ public class TreeNode<T extends Comparable<T>> implements Comparable<TreeNode<T>
      *
      */
     void rightRotate() {
-        if(leftChild == null || leftChild.leftChild == null)
+        if(left == null || left.left == null)
             return;
 
-        TreeNode<T> temp = this.leftChild;
-        this.leftChild = this.leftChild.leftChild;
-        temp.leftChild = this.leftChild.rightChild;
-        this.leftChild.rightChild = temp;
+        TreeNode<T> temp = this.left;
+        this.left = this.left.left;
+        temp.left = this.left.right;
+        this.left.right = temp;
     }
 
 
     /**
+     *
+     *
      * Sample case        ==>
      *        A                     A           A is current Node
      *       /                     /
@@ -107,13 +158,132 @@ public class TreeNode<T extends Comparable<T>> implements Comparable<TreeNode<T>
      *
      */
     void leftRotate() {
-        if(leftChild == null || leftChild.leftChild == null)
+        if(left == null || left.left == null)
             return;
 
-        TreeNode<T> temp = this.leftChild;
-        this.leftChild = this.leftChild.leftChild;
-        temp.leftChild = this.leftChild.rightChild;
-        this.leftChild.rightChild = temp;
+        TreeNode<T> temp = this.left;
+        this.left = this.left.left;
+        temp.left = this.left.right;
+        this.left.right = temp;
+    }
+
+
+
+    /** Revisit later
+     *
+     *        4
+     *      /  \
+     *     3    6
+     *    / \  /  \
+     *   1   2 5   9
+     *            / \
+     *           7   8
+     *1. if you reach null, it means no match was found. SO just return
+     * 2. If the left side matches then swim down left side.
+     * 3 Else swim down right side.
+     * 4. If a left or right match is found,
+     *      a. If no childern for the match, then just point to null.
+     *      b. If it has a match,
+     *          (i) If its a left match, the left child is  m
+     * @param node
+     * @return
+     */
+    boolean deleteTreeNode(TreeNode node) {
+
+        int side = this.compareTo(node);
+        switch(side) {
+            case 0:
+                return true;
+
+            case 1:
+                if(this.left == null)
+                    return true;
+
+                if(left.compareTo(node) == 0) {
+                    TreeNode temp = left.left;
+
+                    if(this.left.right == null) {
+                        this.left = temp;
+                        return true;
+                    }
+
+                    this.left = left.right;
+                    this.left.insertBSTTreeNode(temp);
+                    return true;
+                } else {
+                    //Swim down left
+                    this.left.deleteTreeNode(node);
+                }
+
+
+
+                break;
+            case -1:
+                //Insert a mirror of case 1 here
+                return true;
+            default:
+                return false;
+
+        }
+
+        return  true;
+    }
+
+    /**
+     *
+     * @param node
+     */
+    void rb_insert(TreeNode<T> node) {
+        if(this.compareTo(node) < 0) {
+            if(this.left == null)
+                this.left = node;
+            else
+                this.left.rb_insert(node);
+        }else if(this.compareTo(node) > 0) {
+            if(this.right == null)
+                this.right = node;
+            else
+                this.right.rb_insert(node);
+        }else {
+            return;
+        }
+
+
+        //All rotation cases here
+        if(this.compareTo(node) < 0) {
+            if(isRed(left)) {
+                if(isRed(left.left) && isRed(left.right)) {
+                    left.left.isRed = false;
+                    left.right.isRed = false;
+                    return;
+                }else {
+                    //rotate
+                }
+
+            }else if(isRed(right)) {
+                if(isRed(right.left) && isRed(right.right)) {
+                    right.left.isRed = false;
+                    right.right.isRed = false;
+                }else {
+                    //Rotate
+                }
+            }else {
+                //Npthing to fix
+            }
+        }else {
+            //No red red violation
+        }
+
+
+
+    }
+
+
+    boolean isRed(TreeNode node) {
+        if(node != null && node.isRed )
+            return true;
+
+        return false;
     }
 
 
@@ -121,4 +291,39 @@ public class TreeNode<T extends Comparable<T>> implements Comparable<TreeNode<T>
     public int compareTo(TreeNode<T> o) {
         return this.val.compareTo(o.val);
     }
+
+    public static void main(String[] args) {
+        TreeNode<Integer> root = new TreeNode<Integer>(50);
+        root.insertBSTTreeNode(new TreeNode<Integer>(20));
+        root.insertBSTTreeNode(new TreeNode<Integer>(100));
+        root.insertBSTTreeNode(new TreeNode<Integer>(10));
+        root.insertBSTTreeNode(new TreeNode<Integer>(90));
+        root.insertBSTTreeNode(new TreeNode<Integer>(66));
+        root.insertBSTTreeNode(new TreeNode<Integer>(72));
+        root.insertBSTTreeNode(new TreeNode<Integer>(24));
+        root.insertBSTTreeNode(new TreeNode<Integer>(29));
+        root.insertBSTTreeNode(new TreeNode<Integer>(36));
+        root.insertBSTTreeNode(new TreeNode<Integer>(59));
+        root.insertBSTTreeNode(new TreeNode<Integer>(95));
+        root.insertBSTTreeNode(new TreeNode<Integer>(105));
+
+        root.insertBSTTreeNode(new TreeNode<Integer>(23));
+        root.insertBSTTreeNode(new TreeNode<Integer>(25));
+
+        root.insertBSTTreeNode(new TreeNode<Integer>(8));
+        root.insertBSTTreeNode(new TreeNode<Integer>(11));
+        root.insertBSTTreeNode(new TreeNode<Integer>(15));
+        root.insertBSTTreeNode(new TreeNode<Integer>(9));
+
+        TreePrinter printer = new TreePrinter();
+        printer.printNode(root);
+        //Deletions
+        //ToDO Handle deleting a root node here
+
+        System.out.println();
+        System.out.println(root.deleteBSTTreeNode(new TreeNode<Integer>(100)));
+        printer.printNode(root);
+    }
 }
+
+

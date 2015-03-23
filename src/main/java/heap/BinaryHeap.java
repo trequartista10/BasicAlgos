@@ -62,6 +62,43 @@ public class BinaryHeap<T extends Comparable> {
         return entry;
     }
 
+    public boolean delete(T item) throws Exception {
+        for (int i = 0; i < size; i++) {
+             if(pq[i].compareTo(item) == 0) {
+                 if(i == 0) {
+                     pop();
+                     return true;
+                 }
+
+                 System.out.println("Deleting: " + item);
+                 size--;
+                 pq[i] = null;
+                 if(i == size) {
+                     print();
+                     return true;
+                 }
+                 pq[i] = pq[size];
+                 pq[size] = null;
+                 //size--;
+
+                 //Check parent
+                 int newPos = getNewPos(i);
+                 if(pq[newPos].compareTo(pq[i]) < 0) {
+                     maxHeapify(pq, newPos, true);
+                     print();
+                     return true;
+                 }
+
+                 //Check children
+                 maxHeapify(pq, i, false);
+                 print();
+                 return true;
+             }
+        }
+
+        return false;
+    }
+
     public Comparable find(T entry) {
         for(int i=0; i < size; i++)
             if(comparator.compare(entry,pq[i]) == 0)
@@ -157,6 +194,7 @@ public class BinaryHeap<T extends Comparable> {
             pq.add(1);
             pq.add(91);
             pq.add(600);
+            /*
             pq.pop();
             pq.pop();
             pq.pop();
@@ -169,7 +207,22 @@ public class BinaryHeap<T extends Comparable> {
             pq.pop();
             pq.pop();
             pq.pop();
-
+            */
+            pq.delete(600);
+            pq.delete(19);
+            pq.delete(1);
+            pq.delete(91);
+            pq.delete(912);
+            pq.delete(2);
+            pq.delete(16);
+            pq.delete(500);
+            pq.delete(3);
+            pq.delete(5);
+            pq.delete(912);
+            pq.delete(3);
+            pq.delete(9);
+            pq.delete(90);
+            pq.delete(100);
 
         }catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,7 @@
 package dp;
 
+import java.util.Arrays;
+
 /**
  * Created with IntelliJ IDEA.
  * User: treq
@@ -9,6 +11,10 @@ package dp;
  */
 public class LongestIncreasingSubSeq {
 
+    /**
+     * Brute force is n^2
+     * @param numbers
+     */
     static void findLongestIncSubSeq(int[] numbers) {
         int[] seqCounts = new int[numbers.length];
         int allmax =0;
@@ -36,6 +42,46 @@ public class LongestIncreasingSubSeq {
             }
 
         }
+    }
+
+    /** Optimized lIs
+     * Space Complexity is O(n)
+     * Use active lists. If the element is less than all the end elements of the active list, then create a new active list
+     *1. If A[i] is smallest among all end candidates of active lists, we will start new active list of length 1.
+
+     2. If A[i] is largest among all end candidates of active lists, we will clone the largest active list, and extend it by A[i].
+
+     3. If A[i] is in between, we will find a list with largest end element that is smaller than A[i]. Clone and extend this list by A[i]. We will discard all other lists of same length as that of this modified list.
+
+     http://en.wikipedia.org/wiki/Patience_sorting
+     Refer to : http://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/
+     *
+     *
+     * @param args
+     */
+    static void findLongestIncSubSeqOpt(int[] numbers) {
+        for(int i=0; i < numbers.length; i++) {
+            int num = numbers[i];
+        }
+
+    }
+
+
+
+    /**
+     * Copy on write array and extend
+     * @param arr
+     * @param val
+     * @return
+     */
+    static int[] cloneAndExtend(int[] arr, int val) {
+        if(arr == null)
+            return null;
+
+
+        int[] newArr = Arrays.copyOf(arr,arr.length + 1);
+        newArr[arr.length]=val;
+        return newArr;
     }
 
     public static void main(String[] args) {

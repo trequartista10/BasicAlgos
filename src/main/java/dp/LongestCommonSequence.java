@@ -127,8 +127,8 @@ public class LongestCommonSequence {
     public static void main(String[] args) {
         //String str2 = "abcd";//args[0];
         //String str1 = "afsdfsdfpbc";//args[1];
-        String str2 = "HIEROGLYPHOLOGY";//args[0];
-        String str1 = "MICHAELANGELO";//args[1];
+        String str2 = "HIEROGLYPHOLOGYH";//args[0];
+        String str1 = "MICHAELANGELOH";//args[1];
         //simple_reccurence_lcs(str1, str2);
 
         //String str1 = "AGGTAB";//args[0];

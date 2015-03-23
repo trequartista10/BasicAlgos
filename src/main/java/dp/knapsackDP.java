@@ -86,7 +86,7 @@ public class knapsackDP {
                 int max = dp[i-1][j];        //The previously set benefit for the capacity j flows down
                 //System.out.println(i +" "+j);
                 if(j >= w[i-1]) {
-                    int temp = dp[i-1][j- w[i-1]] + b[i-1];//Case where the new benefit is better benefit without this element
+                    int temp = dp[i-1][j- w[i-1]] + b[i-1];//Case where the new benefit is better benefit with this element
                     if(b[i-1] > max) {
                         max = b[i-1];
                         keep[i][j] = 1;

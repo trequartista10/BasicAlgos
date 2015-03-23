@@ -27,7 +27,7 @@ public class SieveOfErathoneses {
         boolean[] nonPrimes = new boolean[n + 1];
         List<Integer> primes = new ArrayList<Integer>();
         int cnt =0;
-
+        //PriorityQueue
         for(int i=2; i<=n;i++) {
             if(nonPrimes[i] ==  false) {
                // primes.add(i);
