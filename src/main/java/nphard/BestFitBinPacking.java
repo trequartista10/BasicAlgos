@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by kmarathe on 8/11/13.
+ *
  */
 public class BestFitBinPacking<T> {
 
