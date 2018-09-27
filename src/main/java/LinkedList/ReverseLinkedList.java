@@ -52,6 +52,7 @@ public class ReverseLinkedList<T> {
      */
     public static void main(String[] args) {
        LinkedListNode<Integer> a = new LinkedListNode<Integer>(1);
+       
         LinkedListNode<Integer> b = new LinkedListNode<Integer>(2);
         LinkedListNode<Integer> c = new LinkedListNode<Integer>(3);
         LinkedListNode<Integer> d = new LinkedListNode<Integer>(4);
